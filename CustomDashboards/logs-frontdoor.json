@@ -1,0 +1,482 @@
+{
+    "annotations": {
+      "list": [
+        {
+          "builtIn": 1,
+          "datasource": {
+            "type": "grafana",
+            "uid": "-- Grafana --"
+          },
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "name": "Annotations & Alerts",
+          "type": "dashboard"
+        }
+      ]
+    },
+    "editable": true,
+    "fiscalYearStartMonth": 0,
+    "graphTooltip": 0,
+    "id": 21,
+    "links": [
+      {
+        "asDropdown": false,
+        "icon": "external link",
+        "includeVars": false,
+        "keepTime": true,
+        "tags": [],
+        "targetBlank": true,
+        "title": "GitLab-Pipeline-Link",
+        "tooltip": "GitLab",
+        "type": "link",
+        "url": "CI_PIPELINE_URL"
+      }
+    ],
+    "liveNow": false,
+    "panels": [
+      {
+        "datasource": {
+          "type": "grafana-azure-monitor-datasource",
+          "uid": "azureauth"
+        },
+        "description": "",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "fixedColor": "green",
+              "mode": "fixed"
+            },
+            "custom": {
+              "align": "center",
+              "cellOptions": {
+                "applyToRow": false,
+                 "mode": "basic",
+                 "type": "color-background"
+              },
+              "filterable": true,
+              "inspect": true
+            },
+            "mappings": [],
+            "noValue": "NO DATA Available",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "RequestURL"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 869
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "REQUEST_URL"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 269
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "LOCAL_TIME"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 177
+                }
+              ]
+            }
+          ]
+        },
+        "gridPos": {
+          "h": 6,
+          "w": 17,
+          "x": 0,
+          "y": 0
+        },
+        "id": 2,
+        "options": {
+          "cellHeight": "sm",
+          "footer": {
+            "countRows": false,
+            "enablePagination": true,
+            "fields": "",
+            "reducer": [
+              "sum"
+            ],
+            "show": false
+          },
+          "showHeader": true,
+          "sortBy": []
+        },
+        "pluginVersion": "11.0.0",
+        "targets": [
+          {
+            "azureLogAnalytics": {
+              "dashboardTime": false,
+              "query": "AzureDiagnostics\r\n| where ResourceProvider == \"FRONTDOOR_RESOURCE_PROVIDER\" and Category == \"FRONTDOOR_CATEGORY\"\r\n| where TimeGenerated between (datetime(${__from:date:iso}) .. datetime(${__to:date:iso}))\r\n| where requestUri_s !contains \"/grafana\"\r\n| where requestUri_s has_any (\"${FrontDoorRequestURIString}\")\r\n| project REQUEST_URL=requestUri_s, LOCAL_TIME=TimeGenerated  ,STATUS_CODE=httpStatusCode_d, HTTP_METHOD=httpMethod_s, CLIENT_IP=clientIp_s, SOCKET_IP=socketIp_s, SECURITY_PROTOCOL=securityProtocol_s, USER_AGENT=userAgent_s",
+              "resources": [
+                "LOG_ANALYTICS_WORKSPACE_RESOURCE_ID"
+              ],
+              "resultFormat": "logs"
+            },
+            "datasource": {
+              "type": "grafana-azure-monitor-datasource",
+              "uid": "azureauth"
+            },
+            "queryType": "Azure Log Analytics",
+            "refId": "A"
+          }
+        ],
+        "title": "Front Door Logs",
+        "type": "table"
+      },
+      {
+        "datasource": {
+          "type": "grafana-azure-monitor-datasource",
+          "uid": "azureauth"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 6,
+          "w": 4,
+          "x": 17,
+          "y": 0
+        },
+        "id": 3,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "/^count$/",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "auto",
+          "wideLayout": true
+        },
+        "pluginVersion": "11.0.0",
+        "targets": [
+          {
+            "azureLogAnalytics": {
+              "dashboardTime": false,
+              "query": "AzureDiagnostics\r\n| where ResourceProvider == \"FRONTDOOR_RESOURCE_PROVIDER\" and Category == \"FRONTDOOR_CATEGORY\"\r\n| where TimeGenerated between (datetime(${__from:date:iso}) .. datetime(${__to:date:iso}))\r\n| where requestUri_s !contains \"/grafana\"\r\n| where requestUri_s has_any (\"${FrontDoorRequestURIString}\")\r\n| summarize count = tostring(count())",
+              "resources": [
+                "LOG_ANALYTICS_WORKSPACE_RESOURCE_ID"
+              ],
+              "resultFormat": "logs"
+            },
+            "datasource": {
+              "type": "grafana-azure-monitor-datasource",
+              "uid": "azureauth"
+            },
+            "queryType": "Azure Log Analytics",
+            "refId": "A"
+          }
+        ],
+        "title": "Front Door Request Count",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "loki",
+          "uid": "loki"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 6,
+          "w": 3,
+          "x": 21,
+          "y": 0
+        },
+        "id": 4,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "auto",
+          "wideLayout": true
+        },
+        "pluginVersion": "11.0.0",
+        "targets": [
+          {
+            "datasource": {
+              "type": "loki",
+              "uid": "loki"
+            },
+            "editorMode": "code",
+            "expr": "count_over_time({namespace=\"$Namespace\", app=~\"$Service_Name\", pod=~\"$PodName\"} |~ `(?i)$string`[$__range])",
+            "queryType": "instant",
+            "refId": "A"
+          }
+        ],
+        "title": "Total Log Count",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "loki",
+          "uid": "loki"
+        },
+        "gridPos": {
+          "h": 115,
+          "w": 24,
+          "x": 0,
+          "y": 6
+        },
+        "id": 1,
+        "options": {
+          "dedupStrategy": "none",
+          "enableLogDetails": true,
+          "prettifyLogMessage": false,
+          "showCommonLabels": false,
+          "showLabels": false,
+          "showTime": true,
+          "sortOrder": "Descending",
+          "wrapLogMessage": false
+        },
+        "pluginVersion": "10.4.0",
+        "targets": [
+          {
+            "datasource": {
+              "type": "loki",
+              "uid": "loki"
+            },
+            "editorMode": "builder",
+            "expr": "{namespace=\"$Namespace\", app=~\"$Service_Name\", pod=~\"$PodName\"} |~ `$string`",
+            "queryType": "range",
+            "refId": "A"
+          }
+        ],
+        "title": "Pod Logs",
+        "type": "logs"
+      }
+    ],
+    "refresh": "",
+    "schemaVersion": 39,
+    "tags": [],
+    "templating": {
+      "list": [
+        {
+          "current": {
+            "selected": false,
+            "text": "syndication",
+            "value": "syndication"
+          },
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "definition": "",
+          "description": "custom Querying strings",
+          "hide": 0,
+          "includeAll": false,
+          "label": "Namespace",
+          "multi": false,
+          "name": "Namespace",
+          "options": [],
+          "query": {
+            "label": "namespace",
+            "refId": "LokiVariableQueryEditor-VariableQuery",
+            "stream": "",
+            "type": 1
+          },
+          "refresh": 2,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 1,
+          "type": "query"
+        },
+        {
+          "current": {
+            "selected": true,
+            "text": "aarp-service",
+            "value": "aarp-service"
+          },
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "definition": "",
+          "description": "^(?!.*\\d).*$",
+          "hide": 0,
+          "includeAll": true,
+          "label": "Service_Name",
+          "multi": false,
+          "name": "Service_Name",
+          "options": [],
+          "query": {
+            "label": "app",
+            "refId": "LokiVariableQueryEditor-VariableQuery",
+            "stream": "{namespace=\"$Namespace\"} ",
+            "type": 1
+          },
+          "refresh": 2,
+          "regex": "^(?!tls)(?!.*\\d).*$",
+          "skipUrlSync": false,
+          "sort": 1,
+          "type": "query"
+        },
+        {
+          "current": {
+            "selected": false,
+            "text": "All",
+            "value": "$__all"
+          },
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "definition": "",
+          "hide": 0,
+          "includeAll": true,
+          "label": "PodName",
+          "multi": false,
+          "name": "PodName",
+          "options": [],
+          "query": {
+            "label": "pod",
+            "refId": "LokiVariableQueryEditor-VariableQuery",
+            "stream": "{namespace=\"$Namespace\",app=~\"$Service_Name\"}",
+            "type": 1
+          },
+          "refresh": 2,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 0,
+          "type": "query"
+        },
+        {
+          "current": {
+            "selected": false,
+            "text": "",
+            "value": ""
+          },
+          "hide": 0,
+          "label": "Log_String",
+          "name": "string",
+          "options": [
+            {
+              "selected": true,
+              "text": "",
+              "value": ""
+            }
+          ],
+          "query": "",
+          "skipUrlSync": false,
+          "type": "textbox"
+        },
+        {
+          "current": {
+            "selected": false,
+            "text": "",
+            "value": ""
+          },
+          "hide": 0,
+          "label": "FrontDoorRequestURIString",
+          "name": "FrontDoorRequestURIString",
+          "options": [
+            {
+              "selected": true,
+              "text": "",
+              "value": ""
+            }
+          ],
+          "query": "",
+          "skipUrlSync": false,
+          "type": "textbox"
+        }
+      ]
+    },
+    "time": {
+      "from": "now-5m",
+      "to": "now"
+    },
+    "timeRangeUpdatedDuringEditOrView": false,
+    "timepicker": {},
+    "timezone": "",
+    "title": "SmartConx-ENV-Logs",
+    "uid": "samrtconxlogs-TF",
+    "version": 6,
+    "weekStart": ""
+  }
