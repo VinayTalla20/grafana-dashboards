@@ -1,0 +1,1087 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 38,
+  "links": [
+    {
+      "asDropdown": false,
+      "icon": "external link",
+      "includeVars": false,
+      "keepTime": true,
+      "tags": [],
+      "targetBlank": true,
+      "title": "GitLab-Pipeline-Link",
+      "tooltip": "GitLab",
+      "type": "link",
+      "url": "CI_PIPELINE_URL"
+    }
+  ],
+  "panels": [
+    {
+      "datasource": {
+        "type": "grafana-azure-monitor-datasource",
+        "uid": "azureauth"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "green",
+            "mode": "fixed"
+          },
+          "custom": {
+            "align": "center",
+            "cellOptions": {
+              "applyToRow": false,
+              "mode": "basic",
+               "type": "color-background"
+            },
+            "filterable": true,
+            "inspect": true
+          },
+          "mappings": [],
+          "noValue": "NO DATA Available",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "RequestURL"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 1116
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "REQUEST_URL"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 342
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 18,
+        "x": 0,
+        "y": 0
+      },
+      "id": 7,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "enablePagination": true,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "11.0.0",
+      "targets": [
+        {
+          "azureLogAnalytics": {
+            "dashboardTime": false,
+            "query": "AzureDiagnostics\r\n| where ResourceProvider == \"FRONTDOOR_RESOURCE_PROVIDER\" and Category == \"FRONTDOOR_CATEGORY\"\r\n| where requestUri_s has_any (\"${CustomerTenantIdsValues}\")\r\n| project REQUEST_URL=requestUri_s, LOCAL_TIME=TimeGenerated  ,STATUS_CODE=httpStatusCode_d, HTTP_METHOD=httpMethod_s, CLIENT_IP=clientIp_s, SOCKET_IP=socketIp_s, SECURITY_PROTOCOL=securityProtocol_s, USER_AGENT=userAgent_s",
+            "resources": [
+              "LOG_ANALYTICS_WORKSPACE_RESOURCE_ID"
+            ],
+            "resultFormat": "logs"
+          },
+          "datasource": {
+            "type": "grafana-azure-monitor-datasource",
+            "uid": "azureauth"
+          },
+          "queryType": "Azure Log Analytics",
+          "refId": "A"
+        }
+      ],
+      "title": "Front Door Requests",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "grafana-azure-monitor-datasource",
+        "uid": "azureauth"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "center",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "RequestURL"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 1116
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 18,
+        "y": 0
+      },
+      "id": 8,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "11.0.0",
+      "targets": [
+        {
+          "azureLogAnalytics": {
+            "dashboardTime": false,
+            "query": "AzureDiagnostics\r\n| where ResourceProvider == \"FRONTDOOR_RESOURCE_PROVIDER\" and Category == \"FRONTDOOR_CATEGORY\"\r\n| where requestUri_s has_any (\"${CustomerTenantIdsValues}\")\r\n| summarize TotalRequestsCount=count()",
+            "resources": [
+              "LOG_ANALYTICS_WORKSPACE_RESOURCE_ID"
+            ],
+            "resultFormat": "logs"
+          },
+          "datasource": {
+            "type": "grafana-azure-monitor-datasource",
+            "uid": "azureauth"
+          },
+          "queryType": "Azure Log Analytics",
+          "refId": "A"
+        }
+      ],
+      "title": "Front Door Requests Count",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "clusterdnsapi"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "center",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 4,
+        "x": 0,
+        "y": 8
+      },
+      "id": 2,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      },
+      "pluginVersion": "11.0.0",
+      "targets": [
+        {
+          "columns": [],
+          "data": "${copy_of_CustomerTentantIds}",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "clusterdnsapi"
+          },
+          "filters": [],
+          "format": "table",
+          "global_query_id": "",
+          "groq": "*",
+          "hide": false,
+          "json_options": {
+            "columnar": false
+          },
+          "parser": "simple",
+          "refId": "A",
+          "root_selector": "",
+          "source": "inline",
+          "type": "json",
+          "uql": "parse-json",
+          "url": "https://collab-service.syndication.svc.cluster.local/smartconxstatics/getcommunities/$cummunity160",
+          "url_options": {
+            "data": "",
+            "headers": [],
+            "method": "GET"
+          }
+        }
+      ],
+      "title": "Tenant IDs",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "clusterdnsapi"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "center",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 2,
+        "x": 4,
+        "y": 8
+      },
+      "id": 5,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      },
+      "pluginVersion": "11.0.0",
+      "targets": [
+        {
+          "columns": [],
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "clusterdnsapi"
+          },
+          "filters": [],
+          "format": "table",
+          "global_query_id": "",
+          "json_options": {
+            "columnar": false,
+            "root_is_not_array": true
+          },
+          "parser": "simple",
+          "refId": "A",
+          "root_selector": "",
+          "source": "url",
+          "type": "json",
+          "url": "https://collab-service.syndication.svc.cluster.local/smartconxstatics/getcommunities/${copy_of_customerID}",
+          "url_options": {
+            "data": "",
+            "method": "GET"
+          }
+        }
+      ],
+      "title": "Communities IDs",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "clusterdnsapi"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "center",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "boardRoles"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 96
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "messages"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 92
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "nodes"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 72
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "userRoles"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 98
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 6,
+        "y": 8
+      },
+      "id": 4,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "users"
+          }
+        ]
+      },
+      "pluginVersion": "11.0.0",
+      "targets": [
+        {
+          "columns": [],
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "clusterdnsapi"
+          },
+          "filters": [],
+          "format": "table",
+          "global_query_id": "",
+          "refId": "A",
+          "root_selector": "khorosAPICounts",
+          "source": "url",
+          "type": "json",
+          "url": "https://collab-service.syndication.svc.cluster.local/smartconxstatics/${CustomerCommunities}/${__from:date:iso}/${__to:date:iso}/${CustomerTenantIdsValues}",
+          "url_options": {
+            "data": "",
+            "method": "GET"
+          }
+        }
+      ],
+      "title": "Syndication Count",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "clusterdnsapi"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "messageCount"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 128
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 6,
+        "x": 18,
+        "y": 8
+      },
+      "id": 6,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "11.0.0",
+      "targets": [
+        {
+          "columns": [],
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "clusterdnsapi"
+          },
+          "filters": [],
+          "format": "table",
+          "global_query_id": "",
+          "refId": "A",
+          "root_selector": "",
+          "source": "url",
+          "type": "json",
+          "url": "https://collab-service.syndication.svc.cluster.local/smartconxstatics/${CustomerCommunities}/${__from:date:iso}/${__to:date:iso}/${CustomerTenantIdsValues}",
+          "url_options": {
+            "data": "",
+            "method": "GET"
+          }
+        }
+      ],
+      "title": "Syndication Count",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "clusterdnsapi"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "center",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "customerId"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 266
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "customerName"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 326
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 24,
+        "x": 0,
+        "y": 17
+      },
+      "id": 1,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "11.0.0",
+      "targets": [
+        {
+          "columns": [],
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "clusterdnsapi"
+          },
+          "filters": [],
+          "format": "table",
+          "global_query_id": "",
+          "refId": "A",
+          "root_selector": "",
+          "source": "url",
+          "type": "json",
+          "url": "https://collab-service.syndication.svc.cluster.local/smartconxstatics/getcommunitytenantids",
+          "url_options": {
+            "data": "",
+            "headers": [],
+            "method": "GET"
+          }
+        }
+      ],
+      "title": "Total Customers in SmartConX",
+      "type": "table"
+    }
+  ],
+  "schemaVersion": 39,
+  "tags": [
+    "SmartConX_Customer_Usage",
+    "Syndication_Messages_Count",
+    "Customers_FrontDoorRequests_Count"
+  ],
+  "templating": {
+    "list": [
+      {
+        "datasource": {
+          "type": "yesoreyeram-infinity-datasource",
+          "uid": "clusterdnsapi"
+        },
+        "definition": "SmartConx-API- (infinity) json",
+        "hide": 0,
+        "includeAll": false,
+        "label": "CustomerNames",
+        "multi": false,
+        "name": "CustomerNames",
+        "options": [],
+        "query": {
+          "infinityQuery": {
+            "columns": [
+              {
+                "selector": "customerName",
+                "text": "customerName",
+                "type": "string"
+              }
+            ],
+            "filters": [],
+            "format": "table",
+            "refId": "variable",
+            "root_selector": "",
+            "source": "url",
+            "type": "json",
+            "url": "https://collab-service.syndication.svc.cluster.local/smartconxstatics/getcommunitytenantids",
+            "url_options": {
+              "data": "",
+              "method": "GET"
+            }
+          },
+          "query": "",
+          "queryType": "infinity"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "datasource": {
+          "type": "yesoreyeram-infinity-datasource",
+          "uid": "clusterdnsapi"
+        },
+        "definition": "SmartConx-API- (infinity) json",
+        "hide": 0,
+        "includeAll": false,
+        "label": "customerID",
+        "multi": false,
+        "name": "customerID",
+        "options": [],
+        "query": {
+          "infinityQuery": {
+            "columns": [
+              {
+                "selector": "customerId",
+                "text": "customerId",
+                "type": "number"
+              },
+              {
+                "selector": "customerName",
+                "text": "customerName",
+                "type": "string"
+              }
+            ],
+            "filters": [
+              {
+                "field": "customerName",
+                "operator": "equals",
+                "value": [
+                  "${CustomerNames}"
+                ]
+              }
+            ],
+            "format": "table",
+            "refId": "variable",
+            "root_selector": "",
+            "source": "url",
+            "type": "json",
+            "url": "https://collab-service.syndication.svc.cluster.local/smartconxstatics/getcommunitytenantids",
+            "url_options": {
+              "data": "",
+              "method": "GET"
+            }
+          },
+          "query": "",
+          "queryType": "infinity"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "datasource": {
+          "type": "yesoreyeram-infinity-datasource",
+          "uid": "clusterdnsapi"
+        },
+        "definition": "SmartConx-API- (infinity) json",
+        "hide": 2,
+        "includeAll": false,
+        "label": "CustomerTentantIds",
+        "multi": false,
+        "name": "CustomerTentantIds",
+        "options": [],
+        "query": {
+          "infinityQuery": {
+            "columns": [
+              {
+                "selector": "tenantIds",
+                "text": "tenantIds",
+                "type": "string"
+              },
+              {
+                "selector": "customerName",
+                "text": "customerName",
+                "type": "string"
+              }
+            ],
+            "filters": [
+              {
+                "field": "customerName",
+                "operator": "equals",
+                "value": [
+                  "${CustomerNames}"
+                ]
+              }
+            ],
+            "format": "table",
+            "refId": "variable",
+            "root_selector": "",
+            "source": "url",
+            "type": "json",
+            "url": "https://collab-service.syndication.svc.cluster.local/smartconxstatics/getcommunitytenantids",
+            "url_options": {
+              "data": "",
+              "method": "GET"
+            }
+          },
+          "query": "",
+          "queryType": "infinity"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "datasource": {
+          "type": "yesoreyeram-infinity-datasource",
+          "uid": "clusterdnsapi"
+        },
+        "definition": "SmartConx-API- (infinity) json",
+        "hide": 0,
+        "includeAll": false,
+        "label": "CustomerTenantIdsValues",
+        "multi": false,
+        "name": "CustomerTenantIdsValues",
+        "options": [],
+        "query": {
+          "infinityQuery": {
+            "columns": [],
+            "data": "${copy_of_CustomerTentantIds}",
+            "filters": [],
+            "format": "table",
+            "refId": "variable",
+            "root_selector": "",
+            "source": "inline",
+            "type": "json",
+            "url": "https://collab-service.syndication.svc.cluster.local/smartconxstatics/getcommunities/${customerID}",
+            "url_options": {
+              "data": "",
+              "method": "GET"
+            }
+          },
+          "query": "",
+          "queryType": "infinity"
+        },
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "datasource": {
+          "type": "yesoreyeram-infinity-datasource",
+          "uid": "clusterdnsapi"
+        },
+        "definition": "SmartConx-API- (infinity) json",
+        "hide": 2,
+        "includeAll": false,
+        "label": "CustomerTentantIds",
+        "multi": false,
+        "name": "copy_of_CustomerTentantIds",
+        "options": [],
+        "query": {
+          "infinityQuery": {
+            "columns": [
+              {
+                "selector": "customerName",
+                "text": "customerName",
+                "type": "string"
+              },
+              {
+                "selector": "tenantIds",
+                "text": "tenantIds",
+                "type": "string"
+              }
+            ],
+            "filters": [
+              {
+                "field": "customerName",
+                "operator": "equals",
+                "value": [
+                  "${CustomerNames}"
+                ]
+              }
+            ],
+            "format": "table",
+            "refId": "variable",
+            "root_selector": "",
+            "source": "url",
+            "type": "json",
+            "url": "https://collab-service.syndication.svc.cluster.local/smartconxstatics/getcommunitytenantids",
+            "url_options": {
+              "data": "",
+              "method": "GET"
+            }
+          },
+          "query": "",
+          "queryType": "infinity"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "datasource": {
+          "type": "yesoreyeram-infinity-datasource",
+          "uid": "clusterdnsapi"
+        },
+        "definition": "SmartConx-API- (infinity) json",
+        "hide": 0,
+        "includeAll": false,
+        "label": "CustomerCommunities",
+        "multi": false,
+        "name": "CustomerCommunities",
+        "options": [],
+        "query": {
+          "infinityQuery": {
+            "columns": [],
+            "filters": [],
+            "format": "table",
+            "refId": "variable",
+            "root_selector": "",
+            "source": "url",
+            "type": "json",
+            "url": "https://collab-service.syndication.svc.cluster.local/smartconxstatics/getcommunities/${copy_of_customerID}",
+            "url_options": {
+              "data": "",
+              "method": "GET"
+            }
+          },
+          "query": "",
+          "queryType": "infinity"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "datasource": {
+          "type": "yesoreyeram-infinity-datasource",
+          "uid": "clusterdnsapi"
+        },
+        "definition": "SmartConx-API- (infinity) json",
+        "hide": 2,
+        "includeAll": false,
+        "label": "customerID",
+        "multi": false,
+        "name": "copy_of_customerID",
+        "options": [],
+        "query": {
+          "infinityQuery": {
+            "columns": [
+              {
+                "selector": "customerName",
+                "text": "customerName",
+                "type": "string"
+              },
+              {
+                "selector": "customerId",
+                "text": "customerId",
+                "type": "number"
+              }
+            ],
+            "filters": [
+              {
+                "field": "customerName",
+                "operator": "equals",
+                "value": [
+                  "${CustomerNames}"
+                ]
+              }
+            ],
+            "format": "table",
+            "refId": "variable",
+            "root_selector": "",
+            "source": "url",
+            "type": "json",
+            "url": "https://collab-service.syndication.svc.cluster.local/smartconxstatics/getcommunitytenantids",
+            "url_options": {
+              "data": "",
+              "method": "GET"
+            }
+          },
+          "query": "",
+          "queryType": "infinity"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-2d",
+    "to": "now"
+  },
+  "timeRangeUpdatedDuringEditOrView": false,
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "SmartConX_Customer_Stats",
+  "uid": "smartconxcustomerstats-TF",
+  "version": 1,
+  "weekStart": ""
+}
